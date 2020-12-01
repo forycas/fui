@@ -18,6 +18,7 @@ export default defineComponent({
 <template>
   <div id="app">
     <FButton>Test</FButton>
+    <FButton>Test 2</FButton>
 
     <FFormItem label="Test form item" prop="test">
       <FInput />
