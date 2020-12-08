@@ -13,10 +13,6 @@ export default {
   name: 'FSelect',
   props: {
     id: String,
-    name: {
-      type: String,
-      required: true
-    },
     modelValue: {
       type: [Number, String, Object],
       required: true
