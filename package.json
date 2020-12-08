@@ -7,6 +7,11 @@
   "module": "dist/fui.esm.js",
   "unpkg": "dist/fui.min.js",
   "types": "fui.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forycas/fui.git"
+  },
+  "homepage": "https://github.com/forycas/fui",
   "files": [
     "dist/*",
     "fui.d.ts",
