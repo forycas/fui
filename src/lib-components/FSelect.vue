@@ -15,7 +15,7 @@ export default {
     id: String,
     modelValue: {
       type: [Number, String, Object],
-      required: true
+      default: null
     },
     options: {
       type: Array,
