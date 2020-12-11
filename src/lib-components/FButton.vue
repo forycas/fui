@@ -5,12 +5,16 @@
       :type="componentType === 'button' ? nativeType : null"
       :to="route"
       :href="href"
-      class="f-button inline-flex items-center transition ease-in-out duration-150 cursor-pointer"
+      class="f-button inline-flex items-center transition ease-in-out duration-300 cursor-pointer leading-5 font-medium focus:outline-none rounded-md"
       :class="{
-      'px-4 py-1 h-10 rounded-md text-sm': size === 'normal',
-      'px-2 h-6 rounded-md text-sm': size === 'small',
-      'border border-gray-300 leading-5 font-medium text-gray-700 bg-white hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50': styling === 'default',
-      'border border-blue-900 leading-5 font-medium text-white bg-teal-600 bg-white hover:bg-teal-500 focus:outline-none focus:border-teal-300 focus:shadow-outline-teal active:text-teal-800 active:bg-teal-50': styling === 'primary'
+      'px-2 h-6 text-sm': size === 'small',
+      'px-3 h-8 text-sm': size === 'medium',
+      'px-4 py-1 h-10 text-sm': size === 'normal',
+      'px-5 py-2 h-12 text-lg': size === 'large',
+      'bg-transparent text-emerald-900 hover:text-emerald-600': styling === 'transparent',
+      'text-gray-700 bg-white border border-emerald-700 hover:text-gray-700 hover:bg-emerald-200 focus:shadow-outline-emerald active:text-gray-800 active:bg-gray-50': styling === 'default',
+      'text-white bg-emerald-600 hover:bg-emerald-500 focus:shadow-outline-emerald active:bg-emerald-50': styling === 'primary',
+      'text-emerald-800 bg-emerald-100 hover:text-emerald-900 hover:bg-emerald-200 focus:shadow-outline-emerald': styling === 'secondary'
     }">
     <slot />
   </component>
@@ -28,7 +32,7 @@ export default {
     size: {
       type: String,
       default: 'normal',
-      validator: value => ['normal', 'small'].includes(value)
+      validator: value => ['normal', 'small', 'medium'].includes(value)
     },
     nativeType: {
       type: String,
