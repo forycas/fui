@@ -11,10 +11,10 @@
       'px-3 h-8 text-sm': size === 'medium',
       'px-4 py-1 h-10 text-sm': size === 'normal',
       'px-5 py-2 h-12 text-lg': size === 'large',
-      'bg-transparent text-emerald-900 hover:text-emerald-600': styling === 'transparent',
-      'text-gray-700 bg-white border border-emerald-700 hover:text-gray-700 hover:bg-emerald-200 focus:shadow-outline-emerald active:text-gray-800 active:bg-gray-50': styling === 'default',
-      'text-white bg-emerald-600 hover:bg-emerald-500 focus:shadow-outline-emerald active:bg-emerald-50': styling === 'primary',
-      'text-emerald-800 bg-emerald-100 hover:text-emerald-900 hover:bg-emerald-200 focus:shadow-outline-emerald': styling === 'secondary'
+      'bg-transparent text-primary-900 hover:text-primary-600': styling === 'transparent',
+      'text-gray-700 bg-white border border-primary-700 hover:text-gray-700 hover:bg-primary-200 focus:shadow-outline-primary active:text-gray-800 active:bg-gray-50': styling === 'default',
+      'text-white bg-primary-600 hover:bg-primary-500 focus:shadow-outline-primary active:bg-primary-50': styling === 'primary',
+      'text-primary-800 bg-primary-100 hover:text-primary-900 hover:bg-primary-200 focus:shadow-outline-primary': styling === 'secondary'
     }">
     <slot />
   </component>
