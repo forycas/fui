@@ -32,7 +32,7 @@ export default {
     size: {
       type: String,
       default: 'normal',
-      validator: value => ['normal', 'small', 'medium'].includes(value)
+      validator: value => ['normal', 'small', 'medium', 'large'].includes(value)
     },
     nativeType: {
       type: String,
