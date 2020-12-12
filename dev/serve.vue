@@ -13,8 +13,15 @@
       <h2 class="text-lg mb-3">Table</h2>
 
       <FTable>
+        <template v-slot:heading>
+          <FTableHeading>Test</FTableHeading>
+          <FTableHeading>Test heading 2</FTableHeading>
+          <FTableHeading>Test heading 3</FTableHeading>
+        </template>
         <FTableRow>
-          <FTableCol>Test</FTableCol>
+          <FTableCol>
+            <FCheckbox />
+          </FTableCol>
           <FTableCol>Test col 2</FTableCol>
           <FTableCol>Test col 3</FTableCol>
         </FTableRow>
@@ -34,6 +41,12 @@
           <FTableCol>Test col 3</FTableCol>
         </FTableRow>
       </FTable>
+    </div>
+
+    <div class="my-5">
+      <h2 class="text-lg mb-3">Checkbox</h2>
+
+      <FCheckbox label="test checkbox" />
     </div>
 
     <FFormItem label="Test form item" prop="test">
@@ -56,10 +69,14 @@ import FSelect from '@/lib-components/FSelect.vue'
 import FTable from '@/lib-components/FTable.vue'
 import FTableRow from '@/lib-components/FTableRow.vue'
 import FTableCol from '@/lib-components/FTableCol.vue'
+import FTableHeading from '@/lib-components/FTableHeading.vue'
+import FCheckbox from '@/lib-components/FCheckbox.vue'
 
 export default defineComponent({
   name: 'ServeDev',
   components: {
+    FCheckbox,
+    FTableHeading,
     FTableCol,
     FTableRow,
     FTable,
