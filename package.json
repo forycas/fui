@@ -1,6 +1,6 @@
 {
   "name": "@forycas/fui",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "main": "dist/fui.ssr.js",
   "browser": "dist/fui.esm.js",
