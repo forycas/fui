@@ -29,7 +29,7 @@
         leave-to-class="opacity-0"
     >
       <div v-if="dropdownState === DROPDOWN_STATES.OPEN"
-           class="absolute mt-1 w-full rounded-md bg-white shadow-lg transition duration-200">
+           class="absolute z-20 mt-1 w-full rounded-md bg-white shadow-lg transition duration-200">
         <ul tabindex="-1"
             role="listbox"
             aria-labelledby="listbox-label"
