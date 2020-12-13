@@ -67,7 +67,7 @@
     </FFormItem>
 
     <FFormItem label="Test select" prop="select">
-      <FSelect v-model="selectValue" :options="[]" />
+      <FSelect v-model="selectValue" :options="selectOptions" />
     </FFormItem>
   </div>
 </template>
@@ -79,7 +79,20 @@ export default defineComponent({
   name: 'ServeDev',
   data () {
     return {
-      selectValue: undefined
+      selectValue: undefined,
+      selectOptions: [{
+        value: 'test-val',
+        label: 'test'
+      }, {
+        value: 'test-val-2',
+        label: 'test 2'
+      }, {
+        value: 'test-val-3',
+        label: 'test 3'
+      }, {
+        value: 'test-val-4',
+        label: 'test 4'
+      }]
     }
   }
 })
