@@ -69,6 +69,10 @@
     <FFormItem label="Test select" prop="select">
       <FSelect v-model="selectValue" :options="selectOptions" />
     </FFormItem>
+
+    <FFormItem label="Test select" prop="select">
+      <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
+    </FFormItem>
   </div>
 </template>
 

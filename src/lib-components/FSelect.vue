@@ -5,12 +5,21 @@
             aria-haspopup="listbox"
             aria-expanded="true"
             aria-labelledby="listbox-label"
-            class="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+            class="relative w-full border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            :class="{
+              'bg-white border-gray-300': styling === 'default',
+              'bg-primary-700 text-white border-primary-900': styling === 'dark'
+            }"
+    >
       <span class="block truncate leading-5 h-5">
         {{ label }}
       </span>
       <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-        <svg class="h-5 w-5 text-gray-400"
+        <svg class="h-5 w-5"
+             :class="{
+               'text-gray-400': styling === 'default',
+               'text-white': styling === 'dark'
+             }"
              xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 20 20"
              fill="currentColor"
@@ -75,6 +84,11 @@ export default {
     options: {
       type: Array,
       default: () => []
+    },
+    styling: {
+      type: String,
+      default: 'default',
+      validator: value => ['default', 'dark'].includes(value)
     }
   },
   directives: {
