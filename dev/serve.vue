@@ -18,6 +18,8 @@
 
       <FInput />
       <FInput disabled />
+      <FInput type="number" />
+      <FInput readonly />
     </div>
 
     <div class="my-5">
@@ -72,30 +74,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-// Uncomment import and local "components" registration if library is not registered globally.
-import { FButton } from '@/entry.esm'
-import FFormItem from '@/lib-components/FFormItem.vue'
-import FInput from '@/lib-components/FInput.vue'
-import FSelect from '@/lib-components/FSelect.vue'
-import FTable from '@/lib-components/FTable.vue'
-import FTableRow from '@/lib-components/FTableRow.vue'
-import FTableCol from '@/lib-components/FTableCol.vue'
-import FTableHeading from '@/lib-components/FTableHeading.vue'
-import FCheckbox from '@/lib-components/FCheckbox.vue'
 
 export default defineComponent({
   name: 'ServeDev',
-  components: {
-    FCheckbox,
-    FTableHeading,
-    FTableCol,
-    FTableRow,
-    FTable,
-    FSelect,
-    FInput,
-    FFormItem,
-    FButton
-  },
   data () {
     return {
       selectValue: undefined

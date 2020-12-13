@@ -2,8 +2,11 @@
   <input :type="type"
          :value="modelValue"
          @input="$emit('update:modelValue', $event.target.value)"
-         class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-primary focus:border-primary-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-         :class="{'bg-gray-200 cursor-not-allowed': disabled}"
+         class="appearance-none shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+         :class="{
+           'bg-gray-200': disabled || readonly,
+           'cursor-not-allowed': disabled
+         }"
   />
 </template>
 
@@ -12,13 +15,14 @@ export default {
   name: 'FInput',
   props: {
     type: {
-      type: [String, Number],
+      type: String,
       default: 'text'
     },
     modelValue: {
       type: String,
       default: ''
     },
+    readonly: Boolean,
     disabled: Boolean
   }
 }
