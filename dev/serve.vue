@@ -1,13 +1,24 @@
 <template>
   <div id="app">
-    <FButton>Test</FButton>
-    <FButton styling="primary">Test 2</FButton>
-    <FButton size="small" styling="primary">Test 2</FButton>
-    <FButton href="/" styling="primary">Link</FButton>
-    <FButton href="/" styling="secondary">Link</FButton>
-    <FButton size="medium" styling="secondary">Link</FButton>
-    <FButton size="large" styling="primary">Link</FButton>
-    <FButton styling="transparent">Link</FButton>
+    <div class="my-5">
+      <h2 class="text-lg mb-3">Buttons</h2>
+
+      <FButton>Test</FButton>
+      <FButton styling="primary">Test 2</FButton>
+      <FButton size="small" styling="primary">Test 2</FButton>
+      <FButton href="/" styling="primary">Link</FButton>
+      <FButton href="/" styling="secondary">Link</FButton>
+      <FButton size="medium" styling="secondary">Link</FButton>
+      <FButton size="large" styling="primary">Link</FButton>
+      <FButton styling="transparent">Link</FButton>
+    </div>
+
+    <div class="my-5">
+      <h2 class="text-lg mb-3">Input</h2>
+
+      <FInput />
+      <FInput disabled />
+    </div>
 
     <div class="my-5">
       <h2 class="text-lg mb-3">Table</h2>
