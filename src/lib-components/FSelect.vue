@@ -96,7 +96,7 @@ export default {
       this.closeDropdown()
     },
     _findValue (value) {
-      return this.options.find(option => option.value === value)
+      return this.options.find(option => option.value === value)?.label
     },
     toggleDropdown () {
       if ([DROPDOWN_STATES.OPENING, DROPDOWN_STATES.OPEN].includes(this.dropdownState)) {

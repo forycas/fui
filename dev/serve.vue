@@ -79,7 +79,7 @@ export default defineComponent({
   name: 'ServeDev',
   data () {
     return {
-      selectValue: undefined,
+      selectValue: 'test-val-2',
       selectOptions: [{
         value: 'test-val',
         label: 'test'
