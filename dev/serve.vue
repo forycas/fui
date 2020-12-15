@@ -73,11 +73,20 @@
     <FFormItem label="Test select" prop="select">
       <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
     </FFormItem>
+
+    <div class="my-5">
+      <h2 class="text-lg mb-3">Datepicker</h2>
+
+      <FDatePicker v-model="selectedDate" />
+
+      <p class="my-2">date selected: {{ selectedDate }}</p>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue'
+import { formatDate } from '@/utils/date'
 
 export default defineComponent({
   name: 'ServeDev',
@@ -96,7 +105,8 @@ export default defineComponent({
       }, {
         value: 'test-val-4',
         label: 'test 4'
-      }]
+      }],
+      selectedDate: formatDate()
     }
   }
 })

@@ -27,7 +27,10 @@
     "publish:patch": "npm version patch && git push && npm run build && npm publish",
     "publish:minor": "npm version minor && git push && npm run build && npm publish"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dayjs": "^1.9.7",
+    "flatpickr": "^4.6.6"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.0",
     "@babel/preset-env": "^7.12.0",
