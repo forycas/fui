@@ -12,4 +12,5 @@ export { default as FTableRow } from './FTableRow.vue'
 export { default as FTableCol } from './FTableCol.vue'
 export { default as FTableHeading } from './FTableHeading.vue'
 export { default as FTextarea } from './FTextarea.vue'
+export { default as FBS } from './FBS.vue'
 

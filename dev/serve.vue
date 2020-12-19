@@ -1,74 +1,79 @@
 <template>
   <div id="app">
-    <div class="my-5">
-      <h2 class="text-lg mb-3">Buttons</h2>
+    <div class="p-8">
+      <div class="my-5">
+        <h2 class="text-lg mb-3">Buttons</h2>
 
-      <FButton>Test</FButton>
-      <FButton styling="primary">Test 2</FButton>
-      <FButton size="small" styling="primary">Test 2</FButton>
-      <FButton href="/" styling="primary">Link</FButton>
-      <FButton href="/" styling="secondary">Link</FButton>
-      <FButton size="medium" styling="secondary">Link</FButton>
-      <FButton size="large" styling="primary">Link</FButton>
-      <FButton styling="transparent">Link</FButton>
+        <FButton>Test</FButton>
+        <FButton styling="primary">Test 2</FButton>
+        <FButton size="small" styling="primary">Test 2</FButton>
+        <FButton href="/" styling="primary">Link</FButton>
+        <FButton href="/" styling="secondary">Link</FButton>
+        <FButton size="medium" styling="secondary">Link</FButton>
+        <FButton size="large" styling="primary">Link</FButton>
+        <FButton styling="transparent">Link</FButton>
+      </div>
+
+      <div class="my-5">
+        <h2 class="text-lg mb-3">Input</h2>
+
+        <FInput />
+        <FInput disabled />
+        <FInput type="number" />
+        <FInput readonly />
+      </div>
+      <FBS v-model="selectValue" :options="selectOptions"></FBS>
+      <div class="my-5">
+        <h2 class="text-lg mb-3">Table</h2>
+
+        <FTable>
+          <template v-slot:heading>
+            <FTableHeading>Test</FTableHeading>
+            <FTableHeading>Test heading 2</FTableHeading>
+            <FTableHeading>Test heading 3</FTableHeading>
+          </template>
+          <FTableRow>
+            <FTableCol>
+              <FCheckbox />
+            </FTableCol>
+            <FTableCol>Test col 2</FTableCol>
+            <FTableCol>Test col 3</FTableCol>
+          </FTableRow>
+          <FTableRow odd>
+            <FTableCol>Test</FTableCol>
+            <FTableCol>Test col 2</FTableCol>
+            <FTableCol>Test col 3</FTableCol>
+          </FTableRow>
+          <FTableRow>
+            <FTableCol>Test</FTableCol>
+            <FTableCol>Test col 2</FTableCol>
+            <FTableCol>Test col 3</FTableCol>
+          </FTableRow>
+          <FTableRow :hoverable="false">
+            <FTableCol>Test</FTableCol>
+            <FTableCol>Test col 2</FTableCol>
+            <FTableCol>Test col 3</FTableCol>
+          </FTableRow>
+        </FTable>
+      </div>
+
+      <div class="my-5">
+        <h2 class="text-lg mb-3">Checkbox</h2>
+
+        <FCheckbox label="test checkbox" />
+      </div>
+
+      <FFormItem label="Test form item" prop="test">
+        <FInput />
+      </FFormItem>
+
+
+<!--      <FFormItem label="Test select" prop="select">-->
+<!--        <FSelect v-model="selectValue" :options="selectOptions" />-->
+<!--      </FFormItem>-->
+
+
     </div>
-
-    <div class="my-5">
-      <h2 class="text-lg mb-3">Input</h2>
-
-      <FInput />
-      <FInput disabled />
-      <FInput type="number" />
-      <FInput readonly />
-    </div>
-
-    <div class="my-5">
-      <h2 class="text-lg mb-3">Table</h2>
-
-      <FTable>
-        <template v-slot:heading>
-          <FTableHeading>Test</FTableHeading>
-          <FTableHeading>Test heading 2</FTableHeading>
-          <FTableHeading>Test heading 3</FTableHeading>
-        </template>
-        <FTableRow>
-          <FTableCol>
-            <FCheckbox />
-          </FTableCol>
-          <FTableCol>Test col 2</FTableCol>
-          <FTableCol>Test col 3</FTableCol>
-        </FTableRow>
-        <FTableRow odd>
-          <FTableCol>Test</FTableCol>
-          <FTableCol>Test col 2</FTableCol>
-          <FTableCol>Test col 3</FTableCol>
-        </FTableRow>
-        <FTableRow>
-          <FTableCol>Test</FTableCol>
-          <FTableCol>Test col 2</FTableCol>
-          <FTableCol>Test col 3</FTableCol>
-        </FTableRow>
-        <FTableRow :hoverable="false">
-          <FTableCol>Test</FTableCol>
-          <FTableCol>Test col 2</FTableCol>
-          <FTableCol>Test col 3</FTableCol>
-        </FTableRow>
-      </FTable>
-    </div>
-
-    <div class="my-5">
-      <h2 class="text-lg mb-3">Checkbox</h2>
-
-      <FCheckbox label="test checkbox" />
-    </div>
-
-    <FFormItem label="Test form item" prop="test">
-      <FInput />
-    </FFormItem>
-
-    <FFormItem label="Test select" prop="select">
-      <FSelect v-model="selectValue" :options="selectOptions" />
-    </FFormItem>
   </div>
 </template>
 
@@ -79,7 +84,7 @@ export default defineComponent({
   name: 'ServeDev',
   data () {
     return {
-      selectValue: 'test-val-2',
+      selectValue: 'test-val',
       selectOptions: [{
         value: 'test-val',
         label: 'test'
