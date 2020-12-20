@@ -22,7 +22,7 @@
         <FInput type="number" />
         <FInput readonly />
       </div>
-      <FBS v-model="selectValue" searchable :options="selectOptions"></FBS>
+      <FSelect v-model="selectValue" searchable :options="selectOptions"/>
       <div class="my-5">
         <h2 class="text-lg mb-3">Table</h2>
 
@@ -106,12 +106,12 @@ export default defineComponent({
 
       // Test case 2
 
-      // selectValue: 'test-val',
-      // selectOptions: ['test-val', 'test-val 2', 'test-val 3', 'test-val 4'],
+      selectValue: 'test-val',
+      selectOptions: ['test-val', 'test-val 2', 'test-val 3', 'test-val 4'],
 
       // Test case 3
-      selectValue: 1,
-      selectOptions: [2, 3, 4, 523, 52434, 122]
+      // selectValue: 1,
+      // selectOptions: [2, 3, 4, 523, 52434, 122]
     }
   }
 })

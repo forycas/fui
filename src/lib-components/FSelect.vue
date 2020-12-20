@@ -1,136 +1,229 @@
 <template>
-  <div v-click-outside="closeDropdown" class="mt-1 relative">
-    <button @click="toggleDropdown"
-            type="button"
-            aria-haspopup="listbox"
-            aria-expanded="true"
-            aria-labelledby="listbox-label"
-            class="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
-      <span class="block truncate leading-5 h-5">
-        {{ label }}
+  <div class="mt-1 relative" v-click-outside="closeSelect">
+    <div ref="trigger"
+         aria-haspopup="listbox"
+         aria-expanded="true"
+         @click="openSelect"
+         aria-labelledby="listbox-label"
+         class="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default sm:text-sm">
+      <input ref="searchInput"
+             :value="showOptions ? searchTerm : selectedValueLabel"
+             @input="searchTerm = $event.target.value"
+             class="w-full focus:ring-transparent appearance-none focus:outline-none block border-none"
+             v-if="searchable"/>
+      <span class="cursor-pointer flex items-center" v-else>
+        <span class="ml-3 block truncate">
+          {{ selectedValueLabel }}
+        </span>
       </span>
-      <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-        <svg class="h-5 w-5 text-gray-400"
-             xmlns="http://www.w3.org/2000/svg"
-             viewBox="0 0 20 20"
-             fill="currentColor"
+
+      <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
              aria-hidden="true">
           <path fill-rule="evenodd"
                 d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                clip-rule="evenodd" />
+                clip-rule="evenodd"/>
         </svg>
       </span>
-    </button>
-
+    </div>
     <transition
         enter-from-class="opacity-0"
         enter-to-class="opacity-100"
         leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-    >
-      <div v-if="dropdownState === DROPDOWN_STATES.OPEN"
-           class="absolute mt-1 w-full rounded-md bg-white shadow-lg transition duration-200">
-        <ul tabindex="-1"
-            role="listbox"
-            aria-labelledby="listbox-label"
-            class="max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-          <!-- Highlighted: "text-white bg-primary-600", Not Highlighted: "text-gray-900"-->
-          <li v-for="(option, $index) in options"
-              @click="select(option)"
-              :key="option.value"
+        leave-to-class="opacity-0">
+      <div class="mt-1 w-full rounded-md bg-white shadow-lg transition ease-in duration-100" ref="popup"
+           v-show="showOptions">
+        <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3"
+            class="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+          <li v-for="(option, i) in filteredOptions" :key="i"
+              id="listbox-item-0"
+              @click="selectOption(option)"
               role="option"
               class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary-700 hover:text-white"
-              :class="{
-                'text-gray-900': option.value !== modelValue,
-                'bg-primary-600 text-white font-semibold': option.value === modelValue
-              }">
-            <span class="font-normal block truncate">
-              {{ option.label }}
-            </span>
+              :class="getActiveClass(option)">
+            <div class="flex items-center">
+              <span class="ml-3 block font-normal truncate">
+                {{ getOptionLabel(option) }}
+              </span>
+            </div>
+            <span class="absolute inset-y-0 right-0 flex items-center pr-4">
+          </span>
           </li>
         </ul>
       </div>
     </transition>
   </div>
 </template>
-
-<script>
+<script lang="ts">
+import {defineComponent, ref, onUnmounted, PropType, computed, Ref, nextTick} from 'vue'
 import clickOutside from '@/directives/clickOutside.ts'
+import {createPopper, Instance} from "@popperjs/core"
 
-const DROPDOWN_STATES = {
-  CLOSED: 'closed',
-  OPENING: 'opening',
-  OPEN: 'open',
-  CLOSING: 'closing'
+type PopperInstance = Instance
+
+type ObjectOption = {
+  label: string;
+  value: string | number
 }
 
-export default {
-  name: 'FSelect',
+type TriggerRef = Ref<HTMLDivElement | null>
+type PopupRef = Ref<HTMLDivElement | null>
+type SearchInputRef = Ref<HTMLInputElement | null>
+
+type SelectOption = ObjectOption | string | number
+type Options = Array<SelectOption>
+
+export default defineComponent({
+  name: "FSelect",
+  directives: {clickOutside},
+  emits: ['update:modelValue'],
   props: {
-    id: String,
     modelValue: {
-      type: [Number, String, Object],
-      default: null
+      type: [Object, String, Number] as PropType<SelectOption>,
+      default: ''
     },
     options: {
-      type: Array,
-      default: () => []
+      type: Array as PropType<Options>,
+      default: () => {
+        return []
+      }
+    },
+    searchable: Boolean as PropType<boolean>,
+    selectedOption: [Object, String, Number] as PropType<SelectOption>
+  },
+  setup(props, {emit}) {
+    // Refs
+    let showOptions = ref<boolean>(false)
+    let trigger = ref<TriggerRef['value']>(null)
+    let popup = ref<PopupRef['value']>(null)
+    let searchInput = ref<SearchInputRef['value']>(null)
+    let popper: PopperInstance | null = null
+    let searchTerm = ref<string>('')
+
+    // Helper const
+    const optionsAreObjects = props.options.every((option: SelectOption) => isObjectOption(option))
+    const selectedOptionIsObject = isObjectOption(props.modelValue)
+    const optionValuesAreTheSameType = (optionsAreObjects && selectedOptionIsObject) || (!optionsAreObjects && !selectedOptionIsObject)
+
+    // Computed values
+    let selectedValueLabel = computed(() => getSelectedOptionLabel(props.modelValue))
+    let filteredOptions = computed(() => {
+      if (searchTerm.value) {
+        if (optionsAreObjects) {
+          return props.options.filter(option => isObjectOption(option) && option.label.toUpperCase().includes(searchTerm.value.toUpperCase()))
+        }
+        return  props.options.filter(option => isNumberOption(option) ? option.toString().includes(searchTerm.value) : !isObjectOption(option) && option.toUpperCase().includes(searchTerm.value.toUpperCase()))
+      }
+      return props.options
+    })
+
+    // Utils
+    function isObjectOption(option: SelectOption): option is ObjectOption {
+      return (option as ObjectOption).hasOwnProperty('value')
     }
-  },
-  directives: {
-    clickOutside
-  },
-  data () {
+
+    function isNumberOption(option: SelectOption): option is number {
+      return typeof option === 'number'
+    }
+
+    // Gets label for options
+    function getOptionLabel(option: SelectOption): string | number {
+      if (typeof option === 'object') {
+        return option.label
+      }
+      return option
+    }
+
+    // Gets class attrs for active option
+    function getActiveClass(option: SelectOption) {
+      let isActiveOption = isObjectOption(option) && isObjectOption(props.modelValue) ? option.value === props.modelValue.value : option === props.modelValue
+      return {
+        'text-gray-900': !isActiveOption,
+        'bg-primary-600 text-white font-semibold': isActiveOption
+      }
+    }
+
+    // Gets label to display on select. Depending on provided modelValue type
+    function getSelectedOptionLabel(option: SelectOption): string | number {
+      let label
+      if (optionsAreObjects && !selectedOptionIsObject) {
+        let item = props.options.find((item: SelectOption) => isObjectOption(item) && item.value === option)
+        if (item) {
+          label = (item as ObjectOption).label
+        }
+      } else if (!optionsAreObjects && optionValuesAreTheSameType) {
+        label = (option as string | number)
+      } else if (optionsAreObjects && optionValuesAreTheSameType) {
+        label = (option as ObjectOption).label
+      }
+      return label || ''
+    }
+
+    // Selects option and emits back to `v-model`
+    function selectOption(option: SelectOption): void {
+      if (optionValuesAreTheSameType) {
+        emit('update:modelValue', option)
+      } else if (optionsAreObjects && !selectedOptionIsObject) {
+        let val = props.options.find(item => (item as ObjectOption).value === (option as ObjectOption).value)
+        if (val) {
+          emit('update:modelValue', (val as ObjectOption).value)
+        }
+      }
+      closeSelect()
+    }
+
+    function openSelect(): void {
+      showOptions.value = true
+      usePopper()
+      if (props.searchable) {
+        nextTick(() => {
+          searchInput.value && searchInput.value.focus()
+        })
+      }
+    }
+
+    function usePopper(): void {
+      if (popper) {
+        popper.update()
+      } else if (!popper && trigger.value && popup.value) {
+        popper = createPopper(trigger.value, popup.value, {
+          placement: 'bottom',
+          modifiers: [
+            {
+              name: 'flip',
+              options: {
+                fallbackPlacements: ['top', 'bottom'],
+              },
+            },
+          ],
+        })
+      }
+    }
+
+    function closeSelect(): void {
+      showOptions.value = false
+      searchTerm.value = ''
+    }
+
+    onUnmounted(() => {
+      if (popper) {
+        popper.destroy()
+      }
+    })
+
     return {
-      label: this._findValue(this.modelValue),
-      DROPDOWN_STATES,
-      dropdownState: DROPDOWN_STATES.CLOSED
-    }
-  },
-  methods: {
-    select (option) {
-      this.$emit('update:modelValue', option.value)
-
-      this.label = option.label
-
-      this.closeDropdown()
-    },
-    _findValue (value) {
-      return this.options.find(option => option.value === value)?.label
-    },
-    toggleDropdown () {
-      if ([DROPDOWN_STATES.OPENING, DROPDOWN_STATES.OPEN].includes(this.dropdownState)) {
-        return this.closeDropdown()
-      } else if ([DROPDOWN_STATES.CLOSING, DROPDOWN_STATES.CLOSED].includes(this.dropdownState)) {
-        return this.openDropdown()
-      }
-    },
-    openDropdown () {
-      if ([DROPDOWN_STATES.OPENING, DROPDOWN_STATES.OPEN].includes(this.dropdownState)) {
-        return
-      }
-
-      this.dropdownState = DROPDOWN_STATES.OPENING
-
-      setTimeout(() => {
-        this.$nextTick(() => {
-          this.dropdownState = DROPDOWN_STATES.OPEN
-        })
-      }, 200)
-    },
-    closeDropdown () {
-      if ([DROPDOWN_STATES.CLOSING, DROPDOWN_STATES.CLOSED].includes(this.dropdownState)) {
-        return
-      }
-
-      this.dropdownState = DROPDOWN_STATES.CLOSING
-
-      setTimeout(() => {
-        this.$nextTick(() => {
-          this.dropdownState = DROPDOWN_STATES.CLOSED
-        })
-      }, 200)
+      showOptions,
+      trigger,
+      popup,
+      selectedValueLabel,
+      searchTerm,
+      filteredOptions,
+      getActiveClass,
+      openSelect,
+      closeSelect,
+      getOptionLabel,
+      selectOption
     }
   }
-}
+})
 </script>
