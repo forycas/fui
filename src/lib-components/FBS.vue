@@ -35,11 +35,6 @@
            v-show="showOptions">
         <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3"
             class="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-          <!--
-            Select option, manage highlight styles based on mouseenter/mouseleave and keyboard navigation.
-
-            Highlighted: "text-white bg-indigo-600", Not Highlighted: "text-gray-900"
-          -->
           <li v-for="(option, i) in filteredOptions" :key="i"
               id="listbox-item-0"
               @click="selectOption(option)"
@@ -51,18 +46,9 @@
                 {{ getOptionLabel(option) }}
               </span>
             </div>
-
-            <!--
-              Checkmark, only display for selected option.
-
-              Highlighted: "text-white", Not Highlighted: "text-indigo-600"
-            -->
             <span class="absolute inset-y-0 right-0 flex items-center pr-4">
-            <!-- Heroicon name: check -->
           </span>
           </li>
-
-          <!-- More options... -->
         </ul>
       </div>
     </transition>
@@ -106,16 +92,20 @@ export default defineComponent({
     selectedOption: [Object, String, Number] as PropType<SelectOption>
   },
   setup(props, {emit}) {
+    // Refs
     let showOptions = ref<boolean>(false)
     let trigger = ref<TriggerRef['value']>(null)
     let popup = ref<PopupRef['value']>(null)
     let searchInput = ref<SearchInputRef['value']>(null)
     let popper: PopperInstance | null = null
     let searchTerm = ref<string>('')
+
+    // Helper const
     const optionsAreObjects = props.options.every((option: SelectOption) => isObjectOption(option))
     const selectedOptionIsObject = isObjectOption(props.modelValue)
     const optionValuesAreTheSameType = (optionsAreObjects && selectedOptionIsObject) || (!optionsAreObjects && !selectedOptionIsObject)
 
+    // Computed values
     let selectedValueLabel = computed(() => getSelectedOptionLabel(props.modelValue))
     let filteredOptions = computed(() => {
       if (searchTerm.value) {
