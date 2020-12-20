@@ -1,17 +1,22 @@
 <template>
   <div class="mt-1 relative" v-click-outside="closeSelect">
-    <button @click="toggleSelect"
-            type="button"
-            aria-haspopup="listbox"
-            aria-expanded="true"
-            aria-labelledby="listbox-label"
-            ref="trigger"
-            class="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-      <span class="flex items-center">
+    <div ref="trigger"
+         aria-haspopup="listbox"
+         aria-expanded="true"
+         @click="openSelect"
+         aria-labelledby="listbox-label"
+         class="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default sm:text-sm">
+      <input ref="searchInput"
+             :value="showOptions ? searchTerm : selectedValueLabel"
+             @input="searchTerm = $event.target.value"
+             class="w-full focus:ring-transparent appearance-none focus:outline-none block border-none"
+             v-if="searchable"/>
+      <span class="cursor-pointer flex items-center" v-else>
         <span class="ml-3 block truncate">
           {{ selectedValueLabel }}
         </span>
       </span>
+
       <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
         <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
              aria-hidden="true">
@@ -20,7 +25,7 @@
                 clip-rule="evenodd"/>
         </svg>
       </span>
-    </button>
+    </div>
     <transition
         enter-from-class="opacity-0"
         enter-to-class="opacity-100"
@@ -35,11 +40,12 @@
 
             Highlighted: "text-white bg-indigo-600", Not Highlighted: "text-gray-900"
           -->
-          <li v-for="(option, i) in options" :key="i"
+          <li v-for="(option, i) in filteredOptions" :key="i"
               id="listbox-item-0"
               @click="selectOption(option)"
               role="option"
-              class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary-700 hover:text-white">
+              class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary-700 hover:text-white"
+              :class="getActiveClass(option)">
             <div class="flex items-center">
               <span class="ml-3 block font-normal truncate">
                 {{ getOptionLabel(option) }}
@@ -63,7 +69,7 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent, ref, onUnmounted, PropType, computed} from 'vue'
+import {defineComponent, ref, onUnmounted, PropType, computed, Ref, nextTick} from 'vue'
 import clickOutside from '@/directives/clickOutside.ts'
 import {createPopper, Instance} from "@popperjs/core"
 
@@ -74,12 +80,17 @@ type ObjectOption = {
   value: string | number
 }
 
+type TriggerRef = Ref<HTMLDivElement | null>
+type PopupRef = Ref<HTMLDivElement | null>
+type SearchInputRef = Ref<HTMLInputElement | null>
+
 type SelectOption = ObjectOption | string | number
 type Options = Array<SelectOption>
 
 export default defineComponent({
   name: "FSelect",
   directives: {clickOutside},
+  emits: ['update:modelValue'],
   props: {
     modelValue: {
       type: [Object, String, Number] as PropType<SelectOption>,
@@ -91,17 +102,39 @@ export default defineComponent({
         return []
       }
     },
+    searchable: Boolean as PropType<boolean>,
     selectedOption: [Object, String, Number] as PropType<SelectOption>
   },
   setup(props, {emit}) {
     let showOptions = ref<boolean>(false)
-    let trigger = ref<HTMLElement>()
-    let popup = ref<HTMLElement>()
+    let trigger = ref<TriggerRef['value']>(null)
+    let popup = ref<PopupRef['value']>(null)
+    let searchInput = ref<SearchInputRef['value']>(null)
     let popper: PopperInstance | null = null
-    const optionsAreObjects = props.options.every((option: SelectOption) => typeof option === 'object')
-    const selectedOptionIsObject = typeof props.modelValue === 'object'
-    const optionValuesAreTheSameType = (optionsAreObjects && selectedOptionIsObject) || (!optionsAreObjects && selectedOptionIsObject)
+    let searchTerm = ref<string>('')
+    const optionsAreObjects = props.options.every((option: SelectOption) => isObjectOption(option))
+    const selectedOptionIsObject = isObjectOption(props.modelValue)
+    const optionValuesAreTheSameType = (optionsAreObjects && selectedOptionIsObject) || (!optionsAreObjects && !selectedOptionIsObject)
+
     let selectedValueLabel = computed(() => getSelectedOptionLabel(props.modelValue))
+    let filteredOptions = computed(() => {
+      if (searchTerm.value) {
+        if (optionsAreObjects) {
+          return props.options.filter(option => isObjectOption(option) && option.label.toUpperCase().includes(searchTerm.value.toUpperCase()))
+        }
+        return  props.options.filter(option => isNumberOption(option) ? option.toString().includes(searchTerm.value) : !isObjectOption(option) && option.toUpperCase().includes(searchTerm.value.toUpperCase()))
+      }
+      return props.options
+    })
+
+    // Utils
+    function isObjectOption(option: SelectOption): option is ObjectOption {
+      return (option as ObjectOption).hasOwnProperty('value')
+    }
+
+    function isNumberOption(option: SelectOption): option is number {
+      return typeof option === 'number'
+    }
 
     // Gets label for options
     function getOptionLabel(option: SelectOption): string | number {
@@ -111,11 +144,20 @@ export default defineComponent({
       return option
     }
 
+    // Gets class attrs for active option
+    function getActiveClass(option: SelectOption) {
+      let isActiveOption = isObjectOption(option) && isObjectOption(props.modelValue) ? option.value === props.modelValue.value : option === props.modelValue
+      return {
+        'text-gray-900': !isActiveOption,
+        'bg-primary-600 text-white font-semibold': isActiveOption
+      }
+    }
+
     // Gets label to display on select. Depending on provided modelValue type
     function getSelectedOptionLabel(option: SelectOption): string | number {
       let label
       if (optionsAreObjects && !selectedOptionIsObject) {
-        let item = props.options.find((item) => (item as ObjectOption).value === option)
+        let item = props.options.find((item: SelectOption) => isObjectOption(item) && item.value === option)
         if (item) {
           label = (item as ObjectOption).label
         }
@@ -140,14 +182,17 @@ export default defineComponent({
       closeSelect()
     }
 
-    function toggleSelect() {
-      showOptions.value = !showOptions.value
-      if (showOptions.value) {
-        usePopper()
+    function openSelect(): void {
+      showOptions.value = true
+      usePopper()
+      if (props.searchable) {
+        nextTick(() => {
+          searchInput.value && searchInput.value.focus()
+        })
       }
     }
 
-    function usePopper() {
+    function usePopper(): void {
       if (popper) {
         popper.update()
       } else if (!popper && trigger.value && popup.value) {
@@ -165,10 +210,10 @@ export default defineComponent({
       }
     }
 
-    function closeSelect() {
+    function closeSelect(): void {
       showOptions.value = false
+      searchTerm.value = ''
     }
-
 
     onUnmounted(() => {
       if (popper) {
@@ -181,7 +226,10 @@ export default defineComponent({
       trigger,
       popup,
       selectedValueLabel,
-      toggleSelect,
+      searchTerm,
+      filteredOptions,
+      getActiveClass,
+      openSelect,
       closeSelect,
       getOptionLabel,
       selectOption

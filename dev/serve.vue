@@ -22,7 +22,7 @@
         <FInput type="number" />
         <FInput readonly />
       </div>
-      <FBS v-model="selectValue" :options="selectOptions"></FBS>
+      <FBS v-model="selectValue" searchable :options="selectOptions"></FBS>
       <div class="my-5">
         <h2 class="text-lg mb-3">Table</h2>
 
@@ -84,20 +84,34 @@ export default defineComponent({
   name: 'ServeDev',
   data () {
     return {
-      selectValue: 'test-val',
-      selectOptions: [{
-        value: 'test-val',
-        label: 'test'
-      }, {
-        value: 'test-val-2',
-        label: 'test 2'
-      }, {
-        value: 'test-val-3',
-        label: 'test 3'
-      }, {
-        value: 'test-val-4',
-        label: 'test 4'
-      }]
+      // Test case 1
+
+      // selectValue: {
+      //   value: 'test-val',
+      //   label: 'test'
+      // },
+      // selectOptions: [{
+      //   value: 'test-val',
+      //   label: 'test'
+      // }, {
+      //   value: 'test-val-2',
+      //   label: 'test 2'
+      // }, {
+      //   value: 'test-val-3',
+      //   label: 'test 3'
+      // }, {
+      //   value: 'test-val-4',
+      //   label: 'test 4'
+      // }],
+
+      // Test case 2
+
+      // selectValue: 'test-val',
+      // selectOptions: ['test-val', 'test-val 2', 'test-val 3', 'test-val 4'],
+
+      // Test case 3
+      selectValue: 1,
+      selectOptions: [2, 3, 4, 523, 52434, 122]
     }
   }
 })
