@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "dayjs": "^1.9.7",
-    "flatpickr": "^4.6.6"
+    "flatpickr": "^4.6.6",
+    "@popperjs/core": "^2.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.0",
