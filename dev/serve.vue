@@ -63,6 +63,25 @@
         <FCheckbox label="test checkbox" />
       </div>
 
+    <FFormItem label="Test form item" prop="test">
+      <FInput />
+    </FFormItem>
+
+    <FFormItem label="Test select" prop="select">
+      <FSelect v-model="selectValue" :options="selectOptions" />
+    </FFormItem>
+
+    <FFormItem label="Test select" prop="select">
+      <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
+    </FFormItem>
+
+    <div class="my-5">
+      <h2 class="text-lg mb-3">Datepicker</h2>
+
+      <FDatePicker v-model="selectedDate" />
+
+      <p class="my-2">date selected: {{ selectedDate }}</p>
+    </div>
       <FFormItem label="Test form item" prop="test">
         <FInput />
       </FFormItem>
@@ -77,8 +96,9 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue'
+import { formatDate } from '@/utils/date'
 
 export default defineComponent({
   name: 'ServeDev',
@@ -112,6 +132,7 @@ export default defineComponent({
       // Test case 3
       // selectValue: 1,
       // selectOptions: [2, 3, 4, 523, 52434, 122]
+      selectedDate: formatDate()
     }
   }
 })

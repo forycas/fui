@@ -2,6 +2,7 @@
 export { default as FButton } from './FButton.vue'
 export { default as FCheckbox } from './FCheckbox.vue'
 export { default as FConfirmDialog } from './FConfirmDialog.vue'
+export { default as FDatePicker } from './FDatePicker.vue'
 export { default as FFormItem } from './FFormItem.vue'
 export { default as FInput } from './FInput.vue'
 export { default as FModal } from './FModal.vue'

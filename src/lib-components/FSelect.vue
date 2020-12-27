@@ -17,7 +17,7 @@
         </span>
       </span>
 
-      <span class="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+      <span class="ml-3 z-10 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
         <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
              aria-hidden="true">
           <path fill-rule="evenodd"
@@ -101,6 +101,7 @@ export default defineComponent({
     let searchTerm = ref<string>('')
 
     // Helper const
+    let pointer = ref(0)
     const optionsAreObjects = props.options.every((option: SelectOption) => isObjectOption(option))
     const selectedOptionIsObject = isObjectOption(props.modelValue)
     const optionValuesAreTheSameType = (optionsAreObjects && selectedOptionIsObject) || (!optionsAreObjects && !selectedOptionIsObject)
@@ -132,6 +133,10 @@ export default defineComponent({
         return option.label
       }
       return option
+    }
+
+    function setPointer (index: number) {
+      pointer.value = index
     }
 
     // Gets class attrs for active option
@@ -218,6 +223,8 @@ export default defineComponent({
       selectedValueLabel,
       searchTerm,
       filteredOptions,
+      pointer,
+      setPointer,
       getActiveClass,
       openSelect,
       closeSelect,
