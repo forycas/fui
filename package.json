@@ -2,31 +2,25 @@
   "name": "@forycas/fui",
   "version": "0.3.0",
   "description": "",
-  "main": "dist/fui.ssr.js",
-  "browser": "dist/fui.esm.js",
-  "module": "dist/fui.esm.js",
-  "unpkg": "dist/fui.min.js",
-  "types": "fui.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/forycas/fui.git"
+  "scripts": {
+    "serve": "vue-cli-service serve dev/serve.ts",
+    "build": "cross-env NODE_ENV=production rollup --config build/rollup.config.js",
+    "lint": "vue-cli-service lint",
+    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
+    "build:ssr": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format cjs",
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
+    "publish:minor": "npm version minor && git push && npm run build && npm publish",
+    "publish:patch": "npm version patch && git push && npm run build && npm publish"
   },
-  "homepage": "https://github.com/forycas/fui",
+  "main": "dist/fui.ssr.js",
+  "module": "dist/fui.esm.js",
+  "browser": "dist/fui.esm.js",
+  "unpkg": "dist/fui.min.js",
   "files": [
     "dist/*",
     "fui.d.ts",
     "src/**/*.vue"
   ],
-  "sideEffects": false,
-  "scripts": {
-    "serve": "vue-cli-service serve dev/serve.ts",
-    "build": "cross-env NODE_ENV=production rollup --config build/rollup.config.js",
-    "build:ssr": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format cjs",
-    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
-    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
-    "publish:patch": "npm version patch && git push && npm run build && npm publish",
-    "publish:minor": "npm version minor && git push && npm run build && npm publish"
-  },
   "dependencies": {
     "@popperjs/core": "^2.6.0",
     "dayjs": "^1.9.8",
@@ -44,12 +38,23 @@
     "@tailwindcss/aspect-ratio": "^0.2.0",
     "@tailwindcss/forms": "^0.2.1",
     "@tailwindcss/typography": "^0.3.1",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "^4.5.7",
+    "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-typescript": "^4.5.7",
     "@vue/cli-service": "^4.5.7",
     "@vue/compiler-sfc": "^3.0.4",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/eslint-config-typescript": "^5.0.2",
     "autoprefixer": "^9.8.6",
     "cross-env": "^7.0.3",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^7.0.0-0",
     "minimist": "^1.2.5",
     "postcss": "^7.0.35",
     "rollup": "^2.35.1",
@@ -66,5 +71,12 @@
   },
   "engines": {
     "node": ">=10"
-  }
+  },
+  "homepage": "https://github.com/forycas/fui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forycas/fui.git"
+  },
+  "sideEffects": false,
+  "types": "fui.d.ts"
 }

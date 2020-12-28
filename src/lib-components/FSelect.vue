@@ -54,6 +54,8 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-use-before-define */
+
 import { defineComponent, ref, onUnmounted, PropType, computed, Ref, nextTick } from 'vue'
 import clickOutside from '@/directives/clickOutside.ts'
 import { createPopper, Instance } from '@popperjs/core'
@@ -62,7 +64,7 @@ type PopperInstance = Instance
 
 type ObjectOption = {
   label: string;
-  value: string | number
+  value: string | number;
 }
 
 type TriggerRef = Ref<HTMLDivElement | null>
@@ -74,7 +76,7 @@ type Options = Array<SelectOption>
 
 export default defineComponent({
   name: 'FSelect',
-  directives: {clickOutside},
+  directives: { clickOutside },
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -90,24 +92,24 @@ export default defineComponent({
     searchable: Boolean as PropType<boolean>,
     selectedOption: [Object, String, Number] as PropType<SelectOption>
   },
-  setup (props, {emit}) {
+  setup (props, { emit }) {
     // Refs
-    let showOptions = ref<boolean>(false)
-    let trigger = ref<TriggerRef['value']>(null)
-    let popup = ref<PopupRef['value']>(null)
-    let searchInput = ref<SearchInputRef['value']>(null)
+    const showOptions = ref<boolean>(false)
+    const trigger = ref<TriggerRef['value']>(null)
+    const popup = ref<PopupRef['value']>(null)
+    const searchInput = ref<SearchInputRef['value']>(null)
     let popper: PopperInstance | null = null
-    let searchTerm = ref<string>('')
+    const searchTerm = ref<string>('')
 
     // Helper const
-    let pointer = ref(0)
+    const pointer = ref(0)
     const optionsAreObjects = props.options.every((option: SelectOption) => isObjectOption(option))
     const selectedOptionIsObject = isObjectOption(props.modelValue)
     const optionValuesAreTheSameType = (optionsAreObjects && selectedOptionIsObject) || (!optionsAreObjects && !selectedOptionIsObject)
 
     // Computed values
-    let selectedValueLabel = computed(() => getSelectedOptionLabel(props.modelValue))
-    let filteredOptions = computed(() => {
+    const selectedValueLabel = computed(() => getSelectedOptionLabel(props.modelValue))
+    const filteredOptions = computed(() => {
       if (searchTerm.value) {
         if (optionsAreObjects) {
           return props.options.filter(option => isObjectOption(option) && option.label.toUpperCase().includes(searchTerm.value.toUpperCase()))
@@ -119,7 +121,7 @@ export default defineComponent({
 
     // Utils
     function isObjectOption (option: SelectOption): option is ObjectOption {
-      return (option as ObjectOption).hasOwnProperty('value')
+      return {}.hasOwnProperty.call(option as ObjectOption, 'value')
     }
 
     function isNumberOption (option: SelectOption): option is number {
@@ -140,7 +142,7 @@ export default defineComponent({
 
     // Gets class attrs for active option
     function getActiveClass (option: SelectOption) {
-      let isActiveOption = isObjectOption(option) && isObjectOption(props.modelValue) ? option.value === props.modelValue.value : option === props.modelValue
+      const isActiveOption = isObjectOption(option) && isObjectOption(props.modelValue) ? option.value === props.modelValue.value : option === props.modelValue
       return isActiveOption ? 'bg-primary-600 text-white font-semibold' : 'text-gray-900'
     }
 
@@ -148,7 +150,7 @@ export default defineComponent({
     function getSelectedOptionLabel (option: SelectOption): string | number {
       let label
       if (optionsAreObjects && !selectedOptionIsObject) {
-        let item = props.options.find((item: SelectOption) => isObjectOption(item) && item.value === option)
+        const item = props.options.find((item: SelectOption) => isObjectOption(item) && item.value === option)
         if (item) {
           label = (item as ObjectOption).label
         }
@@ -165,7 +167,7 @@ export default defineComponent({
       if (optionValuesAreTheSameType) {
         emit('update:modelValue', option)
       } else if (optionsAreObjects && !selectedOptionIsObject) {
-        let val = props.options.find(item => (item as ObjectOption).value === (option as ObjectOption).value)
+        const val = props.options.find(item => (item as ObjectOption).value === (option as ObjectOption).value)
         if (val) {
           emit('update:modelValue', (val as ObjectOption).value)
         }
