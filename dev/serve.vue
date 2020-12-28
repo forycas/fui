@@ -70,11 +70,27 @@
     <div class="my-5">
       <h2 class="text-lg mb-3">Select</h2>
 
+      <FFormItem label="Test select empty" prop="select">
+        <FSelect v-model="selectValueNum" :options="selectOptionsNum" />
+      </FFormItem>
+
+      <FFormItem label="Test select empty searchable" prop="select">
+        <FSelect v-model="selectValueNum" searchable :options="selectOptionsNum" />
+      </FFormItem>
+
       <FFormItem label="Test select" prop="select">
         <FSelect v-model="selectValue" :options="selectOptions" />
       </FFormItem>
 
-      <FFormItem label="Test select" prop="select">
+      <FFormItem label="Test select object" prop="select">
+        <FSelect v-model="selectValueObj" :options="selectOptionsObj" />
+      </FFormItem>
+
+      <FFormItem label="Test searchable select" prop="select">
+        <FSelect v-model="selectValue" searchable :options="selectOptions" />
+      </FFormItem>
+
+      <FFormItem label="Test dark select" prop="select">
         <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
       </FFormItem>
     </div>
@@ -89,13 +105,6 @@
       <FFormItem label="Test form item" prop="test">
         <FInput />
       </FFormItem>
-
-
-<!--      <FFormItem label="Test select" prop="select">-->
-<!--        <FSelect v-model="selectValue" :options="selectOptions" />-->
-<!--      </FFormItem>-->
-
-
     </div>
   </div>
 </template>
@@ -110,23 +119,20 @@ export default defineComponent({
     return {
       // Test case 1
 
-      // selectValue: {
-      //   value: 'test-val',
-      //   label: 'test'
-      // },
-      // selectOptions: [{
-      //   value: 'test-val',
-      //   label: 'test'
-      // }, {
-      //   value: 'test-val-2',
-      //   label: 'test 2'
-      // }, {
-      //   value: 'test-val-3',
-      //   label: 'test 3'
-      // }, {
-      //   value: 'test-val-4',
-      //   label: 'test 4'
-      // }],
+      selectValueObj: 'test-val',
+      selectOptionsObj: [{
+        value: 'test-val',
+        label: 'test'
+      }, {
+        value: 'test-val-2',
+        label: 'test 2'
+      }, {
+        value: 'test-val-3',
+        label: 'test 3'
+      }, {
+        value: 'test-val-4',
+        label: 'test 4'
+      }],
 
       // Test case 2
 
@@ -134,8 +140,8 @@ export default defineComponent({
       selectOptions: ['test-val', 'test-val 2', 'test-val 3', 'test-val 4'],
 
       // Test case 3
-      // selectValue: 1,
-      // selectOptions: [2, 3, 4, 523, 52434, 122]
+      selectValueNum: undefined,
+      selectOptionsNum: [2, 3, 4, 523, 52434, 122],
       selectedDate: formatDate()
     }
   }
