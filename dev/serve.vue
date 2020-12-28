@@ -67,13 +67,17 @@
       <FInput />
     </FFormItem>
 
-    <FFormItem label="Test select" prop="select">
-      <FSelect v-model="selectValue" :options="selectOptions" />
-    </FFormItem>
+    <div class="my-5">
+      <h2 class="text-lg mb-3">Select</h2>
 
-    <FFormItem label="Test select" prop="select">
-      <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
-    </FFormItem>
+      <FFormItem label="Test select" prop="select">
+        <FSelect v-model="selectValue" :options="selectOptions" />
+      </FFormItem>
+
+      <FFormItem label="Test select" prop="select">
+        <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
+      </FFormItem>
+    </div>
 
     <div class="my-5">
       <h2 class="text-lg mb-3">Datepicker</h2>

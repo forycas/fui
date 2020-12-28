@@ -4,13 +4,12 @@
          aria-haspopup="listbox"
          aria-expanded="true"
          @click="openSelect"
-         aria-labelledby="listbox-label"
          class="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default sm:text-sm">
       <input ref="searchInput"
              :value="showOptions ? searchTerm : selectedValueLabel"
              @input="searchTerm = $event.target.value"
              class="w-full focus:ring-transparent appearance-none focus:outline-none block border-none"
-             v-if="searchable"/>
+             v-if="searchable" />
       <span class="cursor-pointer flex items-center" v-else>
         <span class="ml-3 block truncate">
           {{ selectedValueLabel }}
@@ -22,7 +21,7 @@
              aria-hidden="true">
           <path fill-rule="evenodd"
                 d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                clip-rule="evenodd"/>
+                clip-rule="evenodd" />
         </svg>
       </span>
     </div>
@@ -31,12 +30,11 @@
         enter-to-class="opacity-100"
         leave-from-class="opacity-100"
         leave-to-class="opacity-0">
-      <div class="mt-1 w-full rounded-md bg-white shadow-lg transition ease-in duration-100" ref="popup"
+      <div class="z-10 mt-1 w-full rounded-md bg-white shadow-lg transition ease-in duration-100" ref="popup"
            v-show="showOptions">
-        <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3"
+        <ul tabindex="-1" role="listbox"
             class="max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
           <li v-for="(option, i) in filteredOptions" :key="i"
-              id="listbox-item-0"
               @click="selectOption(option)"
               role="option"
               class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-primary-700 hover:text-white"
@@ -54,10 +52,11 @@
     </transition>
   </div>
 </template>
+
 <script lang="ts">
-import {defineComponent, ref, onUnmounted, PropType, computed, Ref, nextTick} from 'vue'
+import { defineComponent, ref, onUnmounted, PropType, computed, Ref, nextTick } from 'vue'
 import clickOutside from '@/directives/clickOutside.ts'
-import {createPopper, Instance} from "@popperjs/core"
+import { createPopper, Instance } from '@popperjs/core'
 
 type PopperInstance = Instance
 
@@ -74,7 +73,7 @@ type SelectOption = ObjectOption | string | number
 type Options = Array<SelectOption>
 
 export default defineComponent({
-  name: "FSelect",
+  name: 'FSelect',
   directives: {clickOutside},
   emits: ['update:modelValue'],
   props: {
@@ -91,7 +90,7 @@ export default defineComponent({
     searchable: Boolean as PropType<boolean>,
     selectedOption: [Object, String, Number] as PropType<SelectOption>
   },
-  setup(props, {emit}) {
+  setup (props, {emit}) {
     // Refs
     let showOptions = ref<boolean>(false)
     let trigger = ref<TriggerRef['value']>(null)
@@ -113,22 +112,22 @@ export default defineComponent({
         if (optionsAreObjects) {
           return props.options.filter(option => isObjectOption(option) && option.label.toUpperCase().includes(searchTerm.value.toUpperCase()))
         }
-        return  props.options.filter(option => isNumberOption(option) ? option.toString().includes(searchTerm.value) : !isObjectOption(option) && option.toUpperCase().includes(searchTerm.value.toUpperCase()))
+        return props.options.filter(option => isNumberOption(option) ? option.toString().includes(searchTerm.value) : !isObjectOption(option) && option.toUpperCase().includes(searchTerm.value.toUpperCase()))
       }
       return props.options
     })
 
     // Utils
-    function isObjectOption(option: SelectOption): option is ObjectOption {
+    function isObjectOption (option: SelectOption): option is ObjectOption {
       return (option as ObjectOption).hasOwnProperty('value')
     }
 
-    function isNumberOption(option: SelectOption): option is number {
+    function isNumberOption (option: SelectOption): option is number {
       return typeof option === 'number'
     }
 
     // Gets label for options
-    function getOptionLabel(option: SelectOption): string | number {
+    function getOptionLabel (option: SelectOption): string | number {
       if (typeof option === 'object') {
         return option.label
       }
@@ -140,16 +139,13 @@ export default defineComponent({
     }
 
     // Gets class attrs for active option
-    function getActiveClass(option: SelectOption) {
+    function getActiveClass (option: SelectOption) {
       let isActiveOption = isObjectOption(option) && isObjectOption(props.modelValue) ? option.value === props.modelValue.value : option === props.modelValue
-      return {
-        'text-gray-900': !isActiveOption,
-        'bg-primary-600 text-white font-semibold': isActiveOption
-      }
+      return isActiveOption ? 'bg-primary-600 text-white font-semibold' : 'text-gray-900'
     }
 
     // Gets label to display on select. Depending on provided modelValue type
-    function getSelectedOptionLabel(option: SelectOption): string | number {
+    function getSelectedOptionLabel (option: SelectOption): string | number {
       let label
       if (optionsAreObjects && !selectedOptionIsObject) {
         let item = props.options.find((item: SelectOption) => isObjectOption(item) && item.value === option)
@@ -165,7 +161,7 @@ export default defineComponent({
     }
 
     // Selects option and emits back to `v-model`
-    function selectOption(option: SelectOption): void {
+    function selectOption (option: SelectOption): void {
       if (optionValuesAreTheSameType) {
         emit('update:modelValue', option)
       } else if (optionsAreObjects && !selectedOptionIsObject) {
@@ -177,7 +173,7 @@ export default defineComponent({
       closeSelect()
     }
 
-    function openSelect(): void {
+    function openSelect (): void {
       showOptions.value = true
       usePopper()
       if (props.searchable) {
@@ -187,7 +183,7 @@ export default defineComponent({
       }
     }
 
-    function usePopper(): void {
+    function usePopper (): void {
       if (popper) {
         popper.update()
       } else if (!popper && trigger.value && popup.value) {
@@ -197,15 +193,15 @@ export default defineComponent({
             {
               name: 'flip',
               options: {
-                fallbackPlacements: ['top', 'bottom'],
-              },
-            },
-          ],
+                fallbackPlacements: ['top', 'bottom']
+              }
+            }
+          ]
         })
       }
     }
 
-    function closeSelect(): void {
+    function closeSelect (): void {
       showOptions.value = false
       searchTerm.value = ''
     }
