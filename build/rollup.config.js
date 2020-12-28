@@ -65,7 +65,13 @@ const baseConfig = {
 const external = [
   // list external dependencies, exactly the way it is written in the import statement.
   // eg. 'jquery'
-  'vue'
+  'vue',
+  'flatpickr',
+  'flatpickr/dist/l10n/lt.js',
+  'flatpickr/dist/flatpickr.min.css',
+  'flatpickr/dist/themes/dark.css',
+  'dayjs',
+  '@popperjs/core'
 ]
 
 // UMD/IIFE shared settings: output.globals
@@ -73,7 +79,11 @@ const external = [
 const globals = {
   // Provide global variable names to replace your external imports
   // eg. jquery: '$'
-  vue: 'Vue'
+  vue: 'Vue',
+  dayjs: 'dayjs',
+  flatpickr: 'Flatpickr',
+  '@popperjs/core': 'popper',
+  'flatpickr/dist/l10n/lt.js': 'FlatpickrLT'
 }
 
 // Customize configs for individual targets
