@@ -8,7 +8,7 @@
       <input ref="searchInput"
              :value="showOptions ? searchTerm : selectedValueLabel"
              @input="searchTerm = $event.target.value"
-             class="w-full focus:ring-transparent appearance-none focus:outline-none block border-none"
+             class="w-full pl-3 focus:ring-transparent appearance-none focus:outline-none block border-none"
              v-if="searchable" />
       <span class="cursor-pointer flex items-center" v-else>
         <span class="h-5 ml-3 block truncate">
