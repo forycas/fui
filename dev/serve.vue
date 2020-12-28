@@ -93,6 +93,10 @@
       <FFormItem label="Test dark select" prop="select">
         <FSelect v-model="selectValue" styling="dark" :options="selectOptions" />
       </FFormItem>
+
+      <FFormItem label="Test dark searchable select" prop="select">
+        <FSelect v-model="selectValue" searchable styling="dark" :options="selectOptions" />
+      </FFormItem>
     </div>
 
     <div class="my-5">
